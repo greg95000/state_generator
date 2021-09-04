@@ -1,0 +1,28 @@
+objects:
+  documentTest:
+    attributes:
+      testAttribute: "int"
+      testAttribute2: "string"
+    functions:
+      testFunction:
+        arg1: "int"
+        arg2: "str"
+        return: "dict"
+      testFunction2:
+        arg1: "int"
+        return:
+    states:
+      interface:
+        attributes:
+          testAttributeState1: "int"
+          testAttributeState2:
+        functions:
+          testFunctionState1:
+            arg1: "int"
+            arg2: "dict"
+          testFunctionState2:
+            arg1: "str"
+      testState1:
+        testAttributeState1: testState2
+      testState2:
+        testAttributeState1: testState1
