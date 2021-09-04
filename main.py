@@ -21,8 +21,10 @@ if __name__ == "__main__":
     project_name = get_project_name()
     create_directories()
     state_generator = StateGenerator("python", project_name)
-    with open("./tests/files/success.yml") as f:
+    with open("./tests/files/fixtures/success.yml") as f:
         result = yaml.load(f)
+    print(result.get("objects").get("documentTest").get("states").get("interface"))
     state_generator.add_interface(
-        "documentTest", result.get("objects").get("documentTest").get("states")
+        "documentTest",
+        result.get("objects").get("documentTest").get("states").get("interface"),
     )

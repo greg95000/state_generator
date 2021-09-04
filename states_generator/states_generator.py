@@ -13,6 +13,10 @@ TEMPLATE_EXTENSION = {
 }
 
 
+class ExtensionNotFound(Exception):
+    pass
+
+
 class StateGenerator:
     def __init__(self, template_type: str, root_path: str) -> None:
         self.env = Environment(
@@ -24,7 +28,7 @@ class StateGenerator:
 
     def _get_template(self, object_name: str) -> Template:
         if self.template_type not in TEMPLATE_EXTENSION:
-            raise Exception(
+            raise ExtensionNotFound(
                 "Extension does not exists, the available extensions are {}".format(
                     [extension_type[0] for extension_type in TEMPLATE_EXTENSION.items()]
                 )
@@ -36,13 +40,17 @@ class StateGenerator:
             )
         )
 
-    def add_interface(self, object_name: str, states: dict) -> None:
-        """[summary]
+    def _write_file(self, file_path, parsed_template):
+        with open(file_path, "w") as f:
+            f.write(parsed_template)
+
+    def add_interface(self, object_name: str, interface: dict) -> None:
+        """Add interface file
 
         Args:
-            states (dict): [description]
+            object_name (str): the name of the object when we want to create the interface
+            states (dict): the states used for this object
         """
-        interface = states.get("interface", {}) or {}
         template = self._get_template("interface")
 
         parsed_template = template.render(
@@ -55,10 +63,9 @@ class StateGenerator:
             object_name=object_name,
             extension=TEMPLATE_EXTENSION[self.template_type],
         )
-        with open(file_path, "w") as f:
-            f.write(parsed_template)
+        self._write_file(file_path, parsed_template)
 
-    def add_state(self, states: dict) -> None:
+    def add_state(self, object_name, states: dict) -> None:
         pass
 
     def update_state(self, states: dict) -> None:

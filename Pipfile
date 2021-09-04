@@ -11,6 +11,7 @@ graphviz = "==0.17"
 [dev-packages]
 black = "*"
 pylint = "*"
+nose2 = "*"
 
 [requires]
 python_version = "3.8"
