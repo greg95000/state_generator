@@ -3,6 +3,7 @@ from states_generator.abstract_generator import (
     AbstractGenerator,
     StateNotFound,
 )
+from states_generator.utils import beautify_template_from_language
 
 
 class InterfaceMethodNotFound(Exception):
@@ -57,7 +58,10 @@ class StateGenerator(AbstractGenerator):
                 state_name=state,
                 extension=TEMPLATE_EXTENSION[self.template_type],
             )
-            self._write_file(file_path, parsed_template)
+            self._write_file(
+                file_path,
+                beautify_template_from_language(self.template_type, parsed_template),
+            )
 
     def update_states(self, states: dict) -> None:
         pass
