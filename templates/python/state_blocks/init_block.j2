@@ -1,0 +1,20 @@
+{% if attributes|length > 0 %}
+    def __init__(
+        self,
+    {%- for attribute, _type in attributes.items() %}
+        {{ attribute }}{%if _type %}: {{ _type }}{% endif %}{% if not loop.last %},{% endif %}
+    {%- endfor %}
+    ) -> None:
+        super().__init__(
+            {%- for attribute in attributes %}
+            {{ attribute }}{% if not loop.last %},{% endif %}
+            {%- endfor %}
+        )
+{% else %}
+    def __init__(self) -> None:
+    super().__init__(
+        {%- for attribute in attributes %}
+        {{ attribute }}{% if not loop.last %},{% endif %}
+        {%- endfor %}
+    )
+{% endif %}

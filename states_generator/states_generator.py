@@ -1,75 +1,67 @@
-from jinja2 import Environment, select_autoescape
-from jinja2.environment import Template
-from jinja2.loaders import FileSystemLoader
-from states_generator.constants import INTERFACE_DIR, STATES_DIR
-
-TEMPLATE_EXTENSION = {
-    "python": "py",
-    "javascript": "js",
-    "typescript": "ts",
-    "golang": "go",
-    "C": "c",
-    "java": "java",
-}
+from states_generator.constants import STATES_DIR
+from states_generator.abstract_generator import (
+    AbstractGenerator,
+    TEMPLATE_EXTENSION,
+    StateNotFound,
+)
 
 
-class ExtensionNotFound(Exception):
+class InterfaceMethodNotFound(Exception):
     pass
 
 
-class StateGenerator:
+class StateGenerator(AbstractGenerator):
     def __init__(self, template_type: str, root_path: str) -> None:
-        self.env = Environment(
-            autoescape=select_autoescape(),
-            loader=FileSystemLoader("templates/{}".format(template_type)),
-        )
-        self.template_type = template_type
-        self.root_path = root_path
+        super().__init__(template_type, root_path)
+        self.interface_functions = []
+        self.states_names = []
 
-    def _get_template(self, object_name: str) -> Template:
-        if self.template_type not in TEMPLATE_EXTENSION:
-            raise ExtensionNotFound(
-                "Extension does not exists, the available extensions are {}".format(
-                    [extension_type[0] for extension_type in TEMPLATE_EXTENSION.items()]
+    def _does_state_name_exists(self, state_name):
+        if state_name not in self.states_names:
+            raise StateNotFound(
+                "State {state_name} not found".format(state_name=state_name)
+            )
+
+    def _get_states_name(self, states):
+        self.states_names = [state for state in states]
+
+    def _does_interface_function_exists(self, state_name, function_name):
+        if function_name not in self.interface_functions:
+            raise InterfaceMethodNotFound(
+                "Method {function_name} used in state {state_name} not found".format(
+                    function_name=function_name, state_name=state_name
                 )
             )
-        return self.env.get_template(
-            "{object_name}_template.{template_extension}".format(
+
+    def _validate_states(self, states):
+        self._get_states_name(states)
+        for state, action_dict in states.items():
+            self._does_state_name_exists(state)
+            function_call, state_call = list(action_dict.items())[0]
+            self._does_interface_function_exists(state, function_call)
+            self._does_state_name_exists(state_call)
+
+    def add_states(self, object_name, interface: dict, states: dict) -> None:
+        self._validate_states(states)
+        template = self._get_template("state")
+        for state, action_dict in states.items():
+            parsed_template = template.render(
+                attributes=interface.get("attributes", []) or [],
+                functions=interface.get("functions", []) or [],
+                state_name=state,
+                functions_call=action_dict,
                 object_name=object_name,
-                template_extension=TEMPLATE_EXTENSION.get(self.template_type),
+                root_path=self.root_path,
             )
-        )
+            file_path = "{state_dir}/{state_name}State.{extension}".format(
+                state_dir=STATES_DIR,
+                state_name=state,
+                extension=TEMPLATE_EXTENSION[self.template_type],
+            )
+            self._write_file(file_path, parsed_template)
 
-    def _write_file(self, file_path, parsed_template):
-        with open(file_path, "w") as f:
-            f.write(parsed_template)
-
-    def add_interface(self, object_name: str, interface: dict) -> None:
-        """Add interface file
-
-        Args:
-            object_name (str): the name of the object when we want to create the interface
-            states (dict): the states used for this object
-        """
-        template = self._get_template("interface")
-
-        parsed_template = template.render(
-            object_name=object_name,
-            attributes=interface.get("attributes", []) or [],
-            functions=interface.get("functions", []) or [],
-        )
-        file_path = "{interface_dir}/{object_name}Inteface.{extension}".format(
-            interface_dir=INTERFACE_DIR,
-            object_name=object_name,
-            extension=TEMPLATE_EXTENSION[self.template_type],
-        )
-        self._write_file(file_path, parsed_template)
-
-    def add_state(self, object_name, states: dict) -> None:
+    def update_states(self, states: dict) -> None:
         pass
 
-    def update_state(self, states: dict) -> None:
-        pass
-
-    def reverse_read_file(self, path: str) -> None:
+    def _reverse_read_file(self, path: str) -> None:
         pass

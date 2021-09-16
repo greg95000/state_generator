@@ -1,5 +1,6 @@
 objects:
   documentTest:
+    initialState: "testState1"
     attributes:
       testAttribute: "int"
       testAttribute2: "string"
@@ -11,18 +12,18 @@ objects:
       testFunction2:
         arg1: "int"
         return:
+    interface:
+      attributes:
+        testAttributeState1: "int"
+        testAttributeState2:
+      functions:
+        testFunctionState1:
+          arg1: "int"
+          arg2: "dict"
+        testFunctionState2:
+          arg1: "str"
     states:
-      interface:
-        attributes:
-          testAttributeState1: "int"
-          testAttributeState2:
-        functions:
-          testFunctionState1:
-            arg1: "int"
-            arg2: "dict"
-          testFunctionState2:
-            arg1: "str"
       testState1:
-        testAttributeState1: testState2
+        testFunctionState1: testState2
       testState2:
-        testAttributeState1: testState1
+        testFunctionState2: testState1

@@ -1,0 +1,5 @@
+from {{ root_path }}.states.interfaces.{{ object_name }}Interface import {{ object_name }}Interface
+
+class {{ state_name }}State({{ object_name }}Interface):
+{%- include 'state_blocks/init_block.j2' %}
+{%- include 'state_blocks/functions_block.j2' %}
