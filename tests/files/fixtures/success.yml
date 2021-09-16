@@ -1,17 +1,14 @@
 objects:
   documentTest:
-    initialState: "testState1"
     attributes:
       testAttribute: "int"
-      testAttribute2: "string"
+      testAttribute2: "str"
     functions:
       testFunction:
         arg1: "int"
         arg2: "str"
-        return: "dict"
       testFunction2:
         arg1: "int"
-        return:
     interface:
       attributes:
         testAttributeState1: "int"

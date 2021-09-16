@@ -12,9 +12,5 @@
         )
 {% else %}
     def __init__(self) -> None:
-    super().__init__(
-        {%- for attribute in attributes %}
-        {{ attribute }}{% if not loop.last %},{% endif %}
-        {%- endfor %}
-    )
+        super().__init__()
 {% endif %}

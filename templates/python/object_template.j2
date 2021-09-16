@@ -1,0 +1,7 @@
+from {{ root_path }}.states.interfaces.{{ object_name }}Interface import {{ object_name }}Interface
+
+class {{ object_name }}:
+{%- include 'object_blocks/init_block.j2' %}
+    def transition_to(self, state):
+        self._state=state
+{% include 'object_blocks/functions_block.j2' %}

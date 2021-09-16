@@ -1,3 +1,4 @@
+from states_generator import object_generator
 import yaml
 import os
 import argparse
@@ -48,11 +49,15 @@ def create_directories() -> None:
 if __name__ == "__main__":
     args = parser.parse_args()
     create_directories()
-    interface_generator = InterfaceGenerator(args.language, args.project_name)
-    state_generator = StateGenerator(args.language, args.project_name)
+    object_generator = object_generator.ObjectGenerator(
+        args.language, args.project_name
+    )
+    # interface_generator = InterfaceGenerator(args.language, args.project_name)
+    # state_generator = StateGenerator(args.language, args.project_name)
     with open(args.yaml_file) as f:
         result = yaml.load(f)
-    print(result.get("objects").get("documentTest").get("interface"))
+    object_generator.add_object("documentTest", result.get("objects")["documentTest"])
+"""     print(result.get("objects").get("documentTest").get("interface"))
     interface_generator.add_interface(
         "documentTest",
         result.get("objects").get("documentTest").get("interface"),
@@ -62,4 +67,4 @@ if __name__ == "__main__":
         "documentTest",
         result.get("objects").get("documentTest").get("interface"),
         result.get("objects").get("documentTest").get("states"),
-    )
+    ) """

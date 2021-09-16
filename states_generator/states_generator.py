@@ -1,7 +1,6 @@
-from states_generator.constants import STATES_DIR
+from states_generator.constants import STATES_DIR, TEMPLATE_EXTENSION
 from states_generator.abstract_generator import (
     AbstractGenerator,
-    TEMPLATE_EXTENSION,
     StateNotFound,
 )
 

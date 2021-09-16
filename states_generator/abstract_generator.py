@@ -1,16 +1,7 @@
 from jinja2.environment import Template
 from jinja2 import Environment, select_autoescape
 from jinja2.loaders import FileSystemLoader
-
-
-TEMPLATE_EXTENSION = {
-    "python": "py",
-    "javascript": "js",
-    "typescript": "ts",
-    "golang": "go",
-    "C": "c",
-    "java": "java",
-}
+from states_generator.constants import TEMPLATE_EXTENSION
 
 
 class ExtensionNotFound(Exception):

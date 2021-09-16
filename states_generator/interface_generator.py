@@ -1,5 +1,6 @@
-from states_generator.abstract_generator import AbstractGenerator, TEMPLATE_EXTENSION
-from states_generator.constants import INTERFACE_DIR
+from states_generator.abstract_generator import AbstractGenerator
+from states_generator.constants import INTERFACE_DIR, TEMPLATE_EXTENSION
+from states_generator.utils import beautify_template_from_language
 
 
 class InterfaceGenerator(AbstractGenerator):
@@ -28,4 +29,7 @@ class InterfaceGenerator(AbstractGenerator):
             object_name=object_name,
             extension=TEMPLATE_EXTENSION[self.template_type],
         )
-        self._write_file(file_path, parsed_template)
+        self._write_file(
+            file_path,
+            beautify_template_from_language(self.template_type, parsed_template),
+        )
