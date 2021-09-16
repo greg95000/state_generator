@@ -7,9 +7,9 @@ name = "pypi"
 pyyaml = "==5.4.1"
 jinja2 = "==3.0.1"
 graphviz = "==0.17"
+black = "*"
 
 [dev-packages]
-black = "*"
 pylint = "*"
 nose2 = "*"
 
