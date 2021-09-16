@@ -52,19 +52,19 @@ if __name__ == "__main__":
     object_generator = object_generator.ObjectGenerator(
         args.language, args.project_name
     )
-    # interface_generator = InterfaceGenerator(args.language, args.project_name)
-    # state_generator = StateGenerator(args.language, args.project_name)
+    interface_generator = InterfaceGenerator(args.language, args.project_name)
+    state_generator = StateGenerator(args.language, args.project_name)
     with open(args.yaml_file) as f:
         result = yaml.load(f)
-    object_generator.add_object("documentTest", result.get("objects")["documentTest"])
-"""     print(result.get("objects").get("documentTest").get("interface"))
-    interface_generator.add_interface(
-        "documentTest",
-        result.get("objects").get("documentTest").get("interface"),
-    )
-    state_generator.interface_functions = interface_generator.interface_functions
-    state_generator.add_states(
-        "documentTest",
-        result.get("objects").get("documentTest").get("interface"),
-        result.get("objects").get("documentTest").get("states"),
-    ) """
+    for object_name, object in (result.get("objects", {}) or {}).items():
+        object_generator.add_object(object_name, object)
+        interface_generator.add_interface(
+            object_name,
+            object.get("interface"),
+        )
+        state_generator.interface_functions = interface_generator.interface_functions
+        state_generator.add_states(
+            object_name,
+            object.get("interface"),
+            object.get("states"),
+        )
