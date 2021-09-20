@@ -2,6 +2,7 @@ from jinja2.environment import Template
 from jinja2 import Environment, select_autoescape
 from jinja2.loaders import FileSystemLoader
 from states_generator.constants import TEMPLATE_EXTENSION
+import os
 
 
 class ExtensionNotFound(Exception):
@@ -16,9 +17,12 @@ class AbstractGenerator:
     def __init__(self, template_type: str, root_path: str) -> None:
         self.template_type = template_type
         self.root_path = root_path
+        os_path = os.path.abspath(
+            "{}/../templates/{}".format(os.path.dirname(__file__), template_type)
+        )
         self.env = Environment(
             autoescape=select_autoescape(),
-            loader=FileSystemLoader("templates/{}".format(template_type)),
+            loader=FileSystemLoader(os_path),
         )
 
     def _get_template(self, object_name: str) -> Template:
