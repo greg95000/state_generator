@@ -1,16 +1,30 @@
 {%- if functions|length > 0 -%}
 {%- for function, args in functions.items() %}
-    {%- if function|length == 0 %}
+    {%- if args is none or args|length == 0 %}
     def {{function}}(self) -> None:
-        raise NotImplementedError()
+        self.{{ snake_object_name }}.transition_to({{ function_call[function] }}(
+            self.{{ snake_object_name }},
+            {%- for attribute in attributes %}
+            {{ attribute }}{% if not loop.last %},{% endif %}
+            {%- endfor %}
+            )
+        )
     {% else %}
+    {% if function and function_call[function] %}
     def {{function}}(
         self,
         {%- for arg, _type in args.items() %}
         {{ arg }}: {{ _type }}{% if not loop.last %},{% endif %}
         {%- endfor %}
     ) -> None:
-        raise NotImplementedError()
+        self.{{ snake_object_name }}.transition_to({{ function_call[function] }}(
+            self.{{ snake_object_name }},
+            {%- for attribute in attributes %}
+            {{ attribute }}{% if not loop.last %},{% endif %}
+            {%- endfor %}
+            )
+        )
+    {% endif %}
     {% endif -%}
 {% endfor %}
 {%- endif %}

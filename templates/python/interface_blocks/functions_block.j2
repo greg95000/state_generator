@@ -1,6 +1,6 @@
 {%- if functions|length > 0 -%}
 {%- for function, args in functions.items() %}
-    {%- if function|length == 0 %}
+    {%- if args is none or args|length == 0 %}
     def {{function}}(self) -> None:
         raise NotImplementedError()
     {% else %}

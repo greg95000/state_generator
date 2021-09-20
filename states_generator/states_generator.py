@@ -3,7 +3,7 @@ from states_generator.abstract_generator import (
     AbstractGenerator,
     StateNotFound,
 )
-from states_generator.utils import beautify_template_from_language
+from states_generator.utils import beautify_template_from_language, from_camel_to_snake
 
 
 class InterfaceMethodNotFound(Exception):
@@ -41,17 +41,23 @@ class StateGenerator(AbstractGenerator):
             self._does_interface_function_exists(state, function_call)
             self._does_state_name_exists(state_call)
 
+    def _get_required_state(self, action_dict: dict):
+        return [state[1] for state in action_dict.items()]
+
     def add_states(self, object_name, interface: dict, states: dict) -> None:
         self._validate_states(states)
         template = self._get_template("state")
         for state, action_dict in states.items():
+
             parsed_template = template.render(
+                root_path=self.root_path,
+                function_call=action_dict,
+                object_name=object_name,
                 attributes=interface.get("attributes", []) or [],
                 functions=interface.get("functions", []) or [],
                 state_name=state,
-                functions_call=action_dict,
-                object_name=object_name,
-                root_path=self.root_path,
+                snake_object_name=from_camel_to_snake(object_name),
+                required_states=self._get_required_state(action_dict),
             )
             file_path = "{state_dir}/{state_name}State.{extension}".format(
                 state_dir=STATES_DIR,

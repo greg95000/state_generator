@@ -1,4 +1,3 @@
-from states_generator import object_generator
 from states_generator.object_generator import ObjectGenerator
 from unittest import TestCase
 from unittest.mock import Mock

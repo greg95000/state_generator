@@ -1,6 +1,6 @@
 from states_generator.abstract_generator import AbstractGenerator
 from states_generator.constants import INTERFACE_DIR, TEMPLATE_EXTENSION
-from states_generator.utils import beautify_template_from_language
+from states_generator.utils import beautify_template_from_language, from_camel_to_snake
 
 
 class InterfaceGenerator(AbstractGenerator):
@@ -20,7 +20,9 @@ class InterfaceGenerator(AbstractGenerator):
             function_name for function_name in interface.get("functions", []) or []
         ]
         parsed_template = template.render(
+            root_path=self.root_path,
             object_name=object_name,
+            snake_object_name=from_camel_to_snake(object_name),
             attributes=interface.get("attributes", []) or [],
             functions=interface.get("functions", []) or [],
         )

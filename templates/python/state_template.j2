@@ -1,4 +1,8 @@
 from {{ root_path }}.states.interfaces.{{ object_name }}Interface import {{ object_name }}Interface
+from {{ root_path }}.states.models.{{ object_name }} import {{ object_name }}
+{%- for required_state in required_states %}
+from {{ root_path }}.states.models.{{ required_state }} import {{ required_state }}
+{%- endfor %}
 
 class {{ state_name }}State({{ object_name }}Interface):
 {%- include 'state_blocks/init_block.j2' %}

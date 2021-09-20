@@ -1,16 +1,22 @@
 {% if attributes|length > 0 %}
     def __init__(
         self,
+        {{ snake_object_name }}: {{ object_name }},
     {%- for attribute, _type in attributes.items() %}
         {{ attribute }}{%if _type %}: {{ _type }}{% endif %}{% if not loop.last %},{% endif %}
     {%- endfor %}
     ) -> None:
+        self.{{ snake_object_name }} = {{ snake_object_name }}
     {%- for attribute in attributes %}
         self.{{ attribute }} = {{ attribute }}
     {%- endfor %}
 {% else %}
-    def __init__(self) -> None:
+    def __init__(
+        self, 
+        {{ snake_object_name }}: {{ object_name }}
+    ) -> None:
     {% for attribute in attributes %}
         self.{{ attribute }} = {{ attribute }}
+        self.{{ snake_object_name }} = {{ snake_object_name }}
     {% endfor %}
 {% endif %}

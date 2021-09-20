@@ -22,5 +22,6 @@ objects:
     states:
       testState1:
         testFunctionState1: testState2
+        testFunctionState2: testState1
       testState2:
         testFunctionState2: testState1
